@@ -1,0 +1,6 @@
+.bazeldnf/**
+.idea/**
+bazel-bin
+bazel-out
+bazel-test
+bazel-testlogs

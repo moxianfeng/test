@@ -1,0 +1,50 @@
+load("@bazeldnf//:def.bzl", "bazeldnf")
+load("@bazeldnf//:deps.bzl", "rpmtree")
+load("@bazel_gazelle//:def.bzl", "gazelle")
+load("@io_bazel_rules_docker//container:container.bzl", "container_image", "container_layer", "container_push")
+
+gazelle(name = "gazelle")
+
+bazeldnf(name = "bazeldnf")
+
+container_layer(
+    name = "rpm-layer",
+    tars = [
+        "//rpm:spice-ui-x86_64",
+    ],
+)
+
+#container_image(
+#    name = "app",
+#    # References container_pull from WORKSPACE (above)
+#    base = "quay.io/kubevirt/virt-launcher:v1.0.0-alpha.0",
+#    files = ["//java/com/example/app:Hello_deploy.jar"],
+#    cmd = ["Hello_deploy.jar"]
+#)
+
+container_image(
+    name = "image",
+    directory = "/",
+    base = "@baseimg//image",
+    tars = select({
+#        "@io_bazel_rules_go//go/platform:linux_arm64": [
+#            ":libvirt-config",
+#            ":passwd-tar",
+#            ":nsswitch-tar",
+#            ":qemu-kvm-modules-dir-tar",
+#            "//rpm:launcherbase_aarch64",
+#        ],
+        "//conditions:default": [
+            "//rpm:spice-ui-x86_64",
+        ],
+    }),
+)
+
+container_push(
+    name = "image-push",
+    format = "Docker",
+    image = ":image",
+    registry = "hub.expvent.com.cn:1111",
+    repository = "/public/test-virtlauncher",
+    tag = "v0.0.1",
+)
