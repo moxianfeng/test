@@ -72,12 +72,36 @@ container_deps()
 load("@io_bazel_rules_docker//container:pull.bzl", "container_pull")
 
 container_pull(
-    name = "baseimg",
-    digest = "sha256:49ed398374b0a94a5d67cc99051117a9a422a3972aed0c9f87c0eb115ddf2249",
+    name = "baseimg-amd64",
+    architecture = "amd64",
     registry = "quay.io",
     repository = "kubevirt/virt-launcher",
     tag = "v1.0.0-alpha.0",
 )
+
+
+#container_pull(
+#    name = "baseimg-aarch64",
+#    architecture = "arm64",
+##    registry = "$(SOURCE_REGISTRY)",
+##    repository = "$(SOURCE_REPOSITORY)",
+##    tag = "$(SOURCE_TAG)",
+#    registry = "quay.io",
+#    repository = "kubevirt/virt-launcher",
+#    tag = "v1.0.0-alpha.0",
+#)
+
+container_pull(
+    name = "baseimg-aarch64",
+    architecture = "arm64",
+#    registry = "$(SOURCE_REGISTRY)",
+#    repository = "$(SOURCE_REPOSITORY)",
+#    tag = "$(SOURCE_TAG)",
+    registry = "index.docker.io",
+    repository = "alpine",
+    tag = "latest",
+)
+
 
 rpm(
     name = "acl-0__2.2.53-1.el8.aarch64",
@@ -116,22 +140,6 @@ rpm(
     sha256 = "b37099679b46f9a15d20b7c54fdd993388a8b84105f76869494c1be17140b512",
     urls = [
         "http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/audit-libs-3.0.7-4.el8.x86_64.rpm",
-    ],
-)
-
-rpm(
-    name = "basesystem-0__11-5.el8.aarch64",
-    sha256 = "48226934763e4c412c1eb65df314e6879720b4b1ebcb3d07c126c9526639cb68",
-    urls = [
-        "http://mirror.centos.org/centos/8-stream/BaseOS/aarch64/os/Packages/basesystem-11-5.el8.noarch.rpm",
-    ],
-)
-
-rpm(
-    name = "basesystem-0__11-5.el8.x86_64",
-    sha256 = "48226934763e4c412c1eb65df314e6879720b4b1ebcb3d07c126c9526639cb68",
-    urls = [
-        "http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/basesystem-11-5.el8.noarch.rpm",
     ],
 )
 
@@ -840,70 +848,6 @@ rpm(
 )
 
 rpm(
-    name = "glib2-0__2.56.4-161.el8.aarch64",
-    sha256 = "9f9fd51be407b3b903b942a26d908411fd5546692a9116a8f208d4b5426714f6",
-    urls = [
-        "http://mirror.centos.org/centos/8-stream/BaseOS/aarch64/os/Packages/glib2-2.56.4-161.el8.aarch64.rpm",
-    ],
-)
-
-rpm(
-    name = "glib2-0__2.56.4-161.el8.x86_64",
-    sha256 = "d719ce836f972f57e577f315267f6b5177cc8f8cc9687a8432f1e22cf575bb81",
-    urls = [
-        "http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/glib2-2.56.4-161.el8.x86_64.rpm",
-    ],
-)
-
-rpm(
-    name = "glibc-0__2.28-208.el8.aarch64",
-    sha256 = "4e03038e95b2c9b380b2767b1f0144eeb596aff00a431e325fc3534b80a7a0a1",
-    urls = [
-        "http://mirror.centos.org/centos/8-stream/BaseOS/aarch64/os/Packages/glibc-2.28-208.el8.aarch64.rpm",
-    ],
-)
-
-rpm(
-    name = "glibc-0__2.28-208.el8.x86_64",
-    sha256 = "3529387a82c3eda0825471697f6ad92f8e01f3a897afcba381081f9c33af3718",
-    urls = [
-        "http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/glibc-2.28-208.el8.x86_64.rpm",
-    ],
-)
-
-rpm(
-    name = "glibc-common-0__2.28-208.el8.aarch64",
-    sha256 = "f4ce83dc2efac25d1e30c1953a1876a3c5f50fc9a4a7f58a8da13ec99d40243b",
-    urls = [
-        "http://mirror.centos.org/centos/8-stream/BaseOS/aarch64/os/Packages/glibc-common-2.28-208.el8.aarch64.rpm",
-    ],
-)
-
-rpm(
-    name = "glibc-common-0__2.28-208.el8.x86_64",
-    sha256 = "a585f4262ccf1f3a4cad345f128e256cc8dafbf54f92096e3466dbd359ec192a",
-    urls = [
-        "http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/glibc-common-2.28-208.el8.x86_64.rpm",
-    ],
-)
-
-rpm(
-    name = "glibc-langpack-cs-0__2.28-208.el8.x86_64",
-    sha256 = "23c1a71384df605373810cfca32a03e56b5b0f9d62a4b01615f3e15f5d5f7a6e",
-    urls = [
-        "http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/glibc-langpack-cs-2.28-208.el8.x86_64.rpm",
-    ],
-)
-
-rpm(
-    name = "glibc-langpack-cv-0__2.28-208.el8.aarch64",
-    sha256 = "cfcedb10f609d43d9754ad503ec4e65fcda2f70e5978021754d592908e18d84c",
-    urls = [
-        "http://mirror.centos.org/centos/8-stream/BaseOS/aarch64/os/Packages/glibc-langpack-cv-2.28-208.el8.aarch64.rpm",
-    ],
-)
-
-rpm(
     name = "glusterfs-0__6.0-56.4.el8.x86_64",
     sha256 = "83b47312daf82365b52b67523fb24fbe2cd48ff344e6a07df2845a920c309444",
     urls = [
@@ -968,18 +912,18 @@ rpm(
 )
 
 rpm(
-    name = "google-noto-fonts-common-0__20161022-7.el8.1.x86_64",
-    sha256 = "d90f65b0b7c294e6114387dfcc06e60fe2c8a473f6df691bc468fc909ae2b2de",
+    name = "google-noto-cjk-fonts-common-0__20190416-1.el8.x86_64",
+    sha256 = "49addb49c391cb8a39a73c6ff538c42bddc6c41dbca03f823b6381aacb1ead08",
     urls = [
-        "http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/google-noto-fonts-common-20161022-7.el8.1.noarch.rpm",
+        "http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/google-noto-cjk-fonts-common-20190416-1.el8.noarch.rpm",
     ],
 )
 
 rpm(
-    name = "google-noto-sans-ui-fonts-0__20161022-7.el8.1.x86_64",
-    sha256 = "40fc863cf5c9768d33c7aa1045e4351d1859cc65f9cbbf9f2ce6de0398484db6",
+    name = "google-noto-serif-cjk-ttc-fonts-0__20190416-1.el8.x86_64",
+    sha256 = "bf6b3ef23b2b79f2c144e1a03394fee7dde9aeb2dbee785aaa462465a212802f",
     urls = [
-        "http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/google-noto-sans-ui-fonts-20161022-7.el8.1.noarch.rpm",
+        "http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/google-noto-serif-cjk-ttc-fonts-20190416-1.el8.noarch.rpm",
     ],
 )
 
@@ -3020,22 +2964,6 @@ rpm(
     sha256 = "a6641597a33e17b0a00baa5e970f653c2ebf05a92d6ed8c8694e03f548d37fb6",
     urls = [
         "http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/systemd-pam-239-75.el8.x86_64.rpm",
-    ],
-)
-
-rpm(
-    name = "tzdata-0__2023c-1.el8.aarch64",
-    sha256 = "804a7267d6e2076a5d64d0ce22528b86d2a1d7501173858e95df1c7428ce62f3",
-    urls = [
-        "http://mirror.centos.org/centos/8-stream/BaseOS/aarch64/os/Packages/tzdata-2023c-1.el8.noarch.rpm",
-    ],
-)
-
-rpm(
-    name = "tzdata-0__2023c-1.el8.x86_64",
-    sha256 = "804a7267d6e2076a5d64d0ce22528b86d2a1d7501173858e95df1c7428ce62f3",
-    urls = [
-        "http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/tzdata-2023c-1.el8.noarch.rpm",
     ],
 )
 

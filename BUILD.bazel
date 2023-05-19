@@ -1,18 +1,14 @@
 load("@bazeldnf//:def.bzl", "bazeldnf")
 load("@bazeldnf//:deps.bzl", "rpmtree")
 load("@bazel_gazelle//:def.bzl", "gazelle")
-load("@io_bazel_rules_docker//container:container.bzl", "container_image", "container_layer", "container_push")
+load("@io_bazel_rules_docker//container:container.bzl", "container_image", "container_layer", "container_push", "container_pull")
 
 gazelle(name = "gazelle")
 
 bazeldnf(name = "bazeldnf")
 
-container_layer(
-    name = "rpm-layer",
-    tars = [
-        "//rpm:spice-ui-x86_64",
-    ],
-)
+
+
 
 #container_image(
 #    name = "app",
@@ -22,17 +18,21 @@ container_layer(
 #    cmd = ["Hello_deploy.jar"]
 #)
 
+config_setting(
+    name = "arm_build",
+    values = {"cpu": "arm"},
+)
+
 container_image(
     name = "image",
-    architecture = select({
-        "@io_bazel_rules_go//go/platform:linux_arm64": "arm64",
-        "//conditions:default": "amd64",
-    }),
     directory = "/",
-    base = "@baseimg//image",
+    base = select({
+        ":arm_build": "@baseimg-aarch64//image",
+        "//conditions:default": "@baseimg-amd64//image",
+    }),
     tars = select({
-        "@io_bazel_rules_go//go/platform:linux_arm64": [
-            "//rpm:qemu-kvm_aarch64",
+        ":arm_build": [
+            "//rpm:qemu-kvm-aarch64",
         ],
         "//conditions:default": [
             "//rpm:qemu-kvm-x86_64",
@@ -44,7 +44,10 @@ container_push(
     name = "image-push",
     format = "Docker",
     image = ":image",
-    registry = "hub.expvent.com.cn:1111",
-    repository = "public/test-virtlauncher",
-    tag = "v0.0.1",
+    registry = "$(TARGET_REGISTRY)",
+    repository = "$(TARGET_REPOSITORY)",
+    tag = "$(TARGET_TAG)-$(ARCH)",
+#    registry = "hub.expvent.com.cn:1111",
+#    repository = "public/test-virtlauncher",
+#    tag = "v0.0.1",
 )
